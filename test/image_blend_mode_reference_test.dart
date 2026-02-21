@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
 import 'package:dart_psd_tool/dart_psd_tool.dart';
+
+import 'test_utils.dart';
 
 /// Mapping of Dart `image` package BlendMode to PSD blend mode name.
 const Map<img.BlendMode, String> _imageBlendModeMapping = {
@@ -39,44 +40,6 @@ const List<String> _overlays = ['circle', 'color', 'alpha'];
 /// RMSE thresholds for pass/warn/fail classification.
 const double _thresholdPass = 2.0;
 const double _thresholdWarn = 5.0;
-
-/// Compute RMSE between two images across all RGBA channels.
-double computeRmse(img.Image a, img.Image b) {
-  assert(a.width == b.width && a.height == b.height);
-  final int totalSamples = a.width * a.height * 4;
-  double sumSqDiff = 0;
-
-  for (int y = 0; y < a.height; y++) {
-    for (int x = 0; x < a.width; x++) {
-      final pa = a.getPixel(x, y);
-      final pb = b.getPixel(x, y);
-      for (int ch = 0; ch < 4; ch++) {
-        final double va;
-        final double vb;
-        switch (ch) {
-          case 0:
-            va = pa.r.toDouble();
-            vb = pb.r.toDouble();
-          case 1:
-            va = pa.g.toDouble();
-            vb = pb.g.toDouble();
-          case 2:
-            va = pa.b.toDouble();
-            vb = pb.b.toDouble();
-          case 3:
-            va = pa.a.toDouble();
-            vb = pb.a.toDouble();
-          default:
-            va = 0;
-            vb = 0;
-        }
-        sumSqDiff += (va - vb) * (va - vb);
-      }
-    }
-  }
-
-  return sqrt(sumSqDiff / totalSamples);
-}
 
 void main() {
   final fixtureDir = Directory('test/fixtures/blend-mode-test');

@@ -12,10 +12,20 @@ class PsdCanvasCompositor {
   PsdCanvasCompositor._(this._program);
 
   /// Load the PSD composite shader and create a compositor.
+  ///
+  /// Tries the package asset path first (`packages/dart_psd_tool/...`),
+  /// then falls back to the direct path (`shaders/...`) for in-package tests.
   static Future<PsdCanvasCompositor> create() async {
-    final program = await ui.FragmentProgram.fromAsset(
-      'packages/dart_psd_tool/shaders/psd_composite.frag',
-    );
+    ui.FragmentProgram program;
+    try {
+      program = await ui.FragmentProgram.fromAsset(
+        'packages/dart_psd_tool/shaders/psd_composite.frag',
+      );
+    } catch (_) {
+      program = await ui.FragmentProgram.fromAsset(
+        'shaders/psd_composite.frag',
+      );
+    }
     return PsdCanvasCompositor._(program);
   }
 
@@ -34,6 +44,19 @@ class PsdCanvasCompositor {
     'Difference': 10,
     'Subtract': 11,
     'LinearDodge': 12,
+    'Divide': 13,
+    'Exclusion': 14,
+    'LinearBurn': 15,
+    'VividLight': 16,
+    'LinearLight': 17,
+    'PinLight': 18,
+    'HardMix': 19,
+    'DarkerColor': 20,
+    'LighterColor': 21,
+    'Hue': 22,
+    'Saturation': 23,
+    'Color': 24,
+    'Luminosity': 25,
   };
 
   /// Composite [src] onto [dst] using PSDTool-accurate blending via GPU shader.
@@ -115,6 +138,32 @@ class PsdCanvasCompositor {
         return BlendMode.plus;
       case 'Subtract':
         return BlendMode.difference; // approximate
+      case 'Divide':
+        return BlendMode.colorDodge; // approximate
+      case 'Exclusion':
+        return BlendMode.exclusion;
+      case 'LinearBurn':
+        return BlendMode.multiply; // approximate
+      case 'VividLight':
+        return BlendMode.overlay; // approximate
+      case 'LinearLight':
+        return BlendMode.overlay; // approximate
+      case 'PinLight':
+        return BlendMode.overlay; // approximate
+      case 'HardMix':
+        return BlendMode.hardLight; // approximate
+      case 'DarkerColor':
+        return BlendMode.darken; // approximate
+      case 'LighterColor':
+        return BlendMode.lighten; // approximate
+      case 'Hue':
+        return BlendMode.hue;
+      case 'Saturation':
+        return BlendMode.saturation;
+      case 'Color':
+        return BlendMode.color;
+      case 'Luminosity':
+        return BlendMode.luminosity;
       default:
         return BlendMode.srcOver;
     }
