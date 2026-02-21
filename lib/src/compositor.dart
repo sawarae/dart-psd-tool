@@ -29,7 +29,8 @@ class PsdCompositor {
     String blendMode = 'Normal',
     bool srcPremultiplied = false,
   }) {
-    final blendFn = PsdBlendModes.resolve(blendMode);
+    final isDissolve = blendMode == 'Dissolve';
+    final blendFn = PsdBlendModes.resolveComposite(blendMode);
 
     for (int sy = 0; sy < src.height; sy++) {
       final dy = sy + offsetY;
@@ -68,6 +69,18 @@ class PsdCompositor {
           db = (dp.b.toInt() * 255 ~/ da).clamp(0, 255);
         }
 
+        // Dissolve: binary alpha based on hash threshold
+        if (isDissolve) {
+          final effectiveAlpha = (sa * opacity).round();
+          // Deterministic hash of pixel position for stable output
+          final hash = ((dx * 73856093) ^ (dy * 19349663)) & 0xFF;
+          if (hash >= effectiveAlpha) continue;
+          // Show source pixel at full opacity
+          final a = da == 0 ? 255 : (da + 255 - ((da * 255 * 32897) >> 23));
+          dst.setPixelRgba(dx, dy, sr, sg, sb, a.clamp(0, 255));
+          continue;
+        }
+
         // PSDTool: tmp = sa * opacity * 32897
         final tmp = (sa * opacity * 32897).toInt();
 
@@ -78,10 +91,8 @@ class PsdCompositor {
         final a = a1 + a2 + a3;
         if (a == 0) continue;
 
-        // Blend operation (per-channel)
-        final br = blendFn(sr, dr);
-        final bg = blendFn(sg, dg);
-        final bb = blendFn(sb, db);
+        // Blend operation (per-pixel, handles both per-channel and HSL modes)
+        final (br, bg, bb) = blendFn!(sr, sg, sb, dr, dg, db);
 
         // Final composite (PSDTool blend.ts lines 105-107)
         final outR = ((br * a1 + sr * a2 + dr * a3) ~/ a).clamp(0, 255);

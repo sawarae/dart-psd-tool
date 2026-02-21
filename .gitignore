@@ -6,3 +6,6 @@ pubspec.lock
 .idea/
 .vscode/
 .DS_Store
+output/
+.venv/
+test/fixtures/blend-mode-test/

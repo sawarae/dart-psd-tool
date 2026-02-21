@@ -173,28 +173,58 @@ class PsdReader {
   /// LinearDodge.
   static String _psdBlendModeString(int? psdMode) {
     switch (psdMode) {
-      case img.PsdBlendMode.multiply:
-        return 'Multiply';
-      case img.PsdBlendMode.screen:
-        return 'Screen';
-      case img.PsdBlendMode.overlay:
-        return 'Overlay';
+      case img.PsdBlendMode.dissolve:
+        return 'Dissolve';
       case img.PsdBlendMode.darken:
         return 'Darken';
-      case img.PsdBlendMode.lighten:
-        return 'Lighten';
-      case img.PsdBlendMode.colorDodge:
-        return 'ColorDodge';
+      case img.PsdBlendMode.multiply:
+        return 'Multiply';
       case img.PsdBlendMode.colorBurn:
         return 'ColorBurn';
-      case img.PsdBlendMode.hardLight:
-        return 'HardLight';
-      case img.PsdBlendMode.softLight:
-        return 'SoftLight';
-      case img.PsdBlendMode.difference:
-        return 'Difference';
+      case img.PsdBlendMode.linearBurn:
+        return 'LinearBurn';
+      case img.PsdBlendMode.darkenColor:
+        return 'DarkerColor';
+      case img.PsdBlendMode.lighten:
+        return 'Lighten';
+      case img.PsdBlendMode.screen:
+        return 'Screen';
+      case img.PsdBlendMode.colorDodge:
+        return 'ColorDodge';
       case img.PsdBlendMode.linearDodge:
         return 'LinearDodge';
+      case img.PsdBlendMode.lighterColor:
+        return 'LighterColor';
+      case img.PsdBlendMode.overlay:
+        return 'Overlay';
+      case img.PsdBlendMode.softLight:
+        return 'SoftLight';
+      case img.PsdBlendMode.hardLight:
+        return 'HardLight';
+      case img.PsdBlendMode.vividLight:
+        return 'VividLight';
+      case img.PsdBlendMode.linearLight:
+        return 'LinearLight';
+      case img.PsdBlendMode.pinLight:
+        return 'PinLight';
+      case img.PsdBlendMode.hardMix:
+        return 'HardMix';
+      case img.PsdBlendMode.difference:
+        return 'Difference';
+      case img.PsdBlendMode.exclusion:
+        return 'Exclusion';
+      case img.PsdBlendMode.subtract:
+        return 'Subtract';
+      case img.PsdBlendMode.divide:
+        return 'Divide';
+      case img.PsdBlendMode.hue:
+        return 'Hue';
+      case img.PsdBlendMode.saturation:
+        return 'Saturation';
+      case img.PsdBlendMode.color:
+        return 'Color';
+      case img.PsdBlendMode.luminosity:
+        return 'Luminosity';
       default:
         return 'Normal';
     }
