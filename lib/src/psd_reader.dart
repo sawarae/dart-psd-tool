@@ -123,6 +123,7 @@ class PsdReader {
           bottom: layer.bottom,
           pngBytes: pngBytes,
           blendMode: _psdBlendModeString(layer.blendMode),
+          isClipping: (layer.clipping ?? 0) == 1,
         );
         stack.last.add(node);
       }
