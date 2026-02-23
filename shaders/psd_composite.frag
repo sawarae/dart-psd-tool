@@ -3,6 +3,7 @@
 uniform vec2 uSize;
 uniform float uOpacity;
 uniform float uBlendMode;  // 0=Normal .. 25=Luminosity
+uniform float uSrcStraightAlpha;  // 1.0 = source has straight alpha (skip unpremultiply)
 uniform sampler2D uSrc;
 uniform sampler2D uDst;
 
@@ -210,12 +211,14 @@ vec3 blendPixels(vec3 s, vec3 d, float mode) {
 void main() {
   vec2 uv = FlutterFragCoord().xy / uSize;
 
-  // Sample source and destination (premultiplied alpha from Flutter)
+  // Sample source and destination
   vec4 srcPre = texture(uSrc, uv);
   vec4 dstPre = texture(uDst, uv);
 
-  // Un-premultiply to get straight alpha
-  vec4 s = unpremultiply(srcPre);
+  // Un-premultiply to get straight alpha.
+  // Source may already be straight alpha when textures are loaded without
+  // premultiplication (matching inox2d's texture pipeline).
+  vec4 s = (uSrcStraightAlpha > 0.5) ? srcPre : unpremultiply(srcPre);
   vec4 d = unpremultiply(dstPre);
 
   // PSDTool 3-component alpha compositing
