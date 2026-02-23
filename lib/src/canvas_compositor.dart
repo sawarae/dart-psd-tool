@@ -70,14 +70,16 @@ class PsdCanvasCompositor {
     Rect bounds, {
     double opacity = 1.0,
     String blendMode = 'Normal',
+    bool srcStraightAlpha = false,
   }) {
     final shader = _program.fragmentShader();
 
-    // Uniforms: uSize (0,1), uOpacity (2), uBlendMode (3)
+    // Uniforms: uSize (0,1), uOpacity (2), uBlendMode (3), uSrcStraightAlpha (4)
     shader.setFloat(0, bounds.width);
     shader.setFloat(1, bounds.height);
     shader.setFloat(2, opacity);
     shader.setFloat(3, _blendModeIndex[blendMode] ?? 0);
+    shader.setFloat(4, srcStraightAlpha ? 1.0 : 0.0);
 
     // Samplers: uSrc (0), uDst (1)
     shader.setImageSampler(0, src);
