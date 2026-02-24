@@ -21,6 +21,12 @@ class PsdLayerNode {
   /// PSD blend mode string (e.g. 'Normal', 'Multiply', 'Screen').
   final String blendMode;
 
+  /// True when this layer has the PSD clipping bit set (clipping = 1).
+  ///
+  /// A clipping layer is composited only within the opaque pixels of the
+  /// first non-clipping layer below it in the same group ("clip to base").
+  final bool isClipping;
+
   PsdLayerNode({
     required this.name,
     required this.isGroup,
@@ -34,6 +40,7 @@ class PsdLayerNode {
     List<PsdLayerNode>? children,
     this.pngBytes,
     this.blendMode = 'Normal',
+    this.isClipping = false,
   }) : children = children ?? [];
 
   /// The raw name without `!` or `*` prefix.
