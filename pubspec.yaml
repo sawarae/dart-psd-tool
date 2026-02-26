@@ -22,5 +22,11 @@ dependency_overrides:
   archive: ^4.0.0
 
 flutter:
+  plugin:
+    platforms:
+      macos:
+        pluginClass: DartPsdToolPlugin
+      ios:
+        pluginClass: DartPsdToolPlugin
   shaders:
     - shaders/psd_composite.frag
